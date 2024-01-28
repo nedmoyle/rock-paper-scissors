@@ -1,6 +1,10 @@
+let totalComputerPoints = 0;
+let totalPlayerPoints = 0;
+let gameNumber = 1;
+
 function getComputerChoice() {
     let randomNumber = Math.floor(Math.random() * 30) + 1;
-    // console.log(randomNumber);
+
     if (randomNumber <= 10) {
         return "rock";
     } else if (randomNumber >20) {
@@ -9,7 +13,7 @@ function getComputerChoice() {
         return "scissors";
     }
 }
-// console.log(getComputerChoice());
+
 
 function playRound(playerSelection, computerSelection) {
     let playerSelectionLowercase = playerSelection.toLowerCase();
@@ -30,40 +34,66 @@ function playRound(playerSelection, computerSelection) {
     }
 }
 
-const playerSelection = prompt("What is your choice?");
-console.log(playerSelection.toLowerCase());
-// const computerSelection = getComputerChoice();
-// console.log(computerSelection);
-// console.log(playRound(playerSelection, computerSelection));
+const selectionContent = document.createElement('div');
+selectionContent.classList.add('selectionContent');
 
-function game() {
-    let totalPoints = 0;
-    for (let i=1; i<6; i++){
-        console.log("Game: " + i + ":");
-        let computerSelection = getComputerChoice();
-        console.log("Computer chooses: " + computerSelection);
-        let thisRound = playRound(playerSelection, computerSelection);
-        totalPoints = totalPoints + thisRound;
+const roundContent = document.createElement('div');
+roundContent.classList.add('roundContent');
 
-        if (thisRound == 1) {
-            console.log(playerSelection + " beats " + computerSelection);
-        } else if (thisRound == -1) {
-            console.log(computerSelection + " beats " + playerSelection);
-        } else if (thisRound ==0) {
-            console.log("This round was a draw");
-        }
+const winnerContent = document.createElement('div');
+winnerContent.classList.add('winnerContent');
 
-        console.log(totalPoints);
+const scoreContent = document.createElement('div');
+scoreContent.classList.add('scoreContent');
 
+function game(playerSelection) {
+
+    
+    let computerSelection = getComputerChoice();
+
+    selectionContent.textContent = 'You chose: ' + playerSelection + ', Computer chooses: ' + computerSelection;
+    container.appendChild(selectionContent);
+    
+    let thisRound = playRound(playerSelection, computerSelection);
+
+    if (thisRound == 1) {
+        roundContent.textContent = playerSelection + ' beats ' + computerSelection;
+        totalPlayerPoints++;
+    } else if (thisRound == -1) {
+        roundContent.textContent = computerSelection + ' beats ' + playerSelection;
+        totalComputerPoints++;
+    } else if (thisRound ==0) {
+        roundContent.textContent = 'This round was a draw';
     }
-    if (totalPoints > 0) {
-        return "You Win!";
-    } else if (totalPoints < 0 ) {
-        return "Computer Wins!";
-    } else if (totalPoints == 0) {
-        return "The game was a draw";
+
+    container.appendChild(roundContent);
+
+    scoreContent.textContent = 'Score: Computer = ' + totalComputerPoints + ' Player = ' + totalPlayerPoints;
+    container.appendChild(scoreContent);
+
+
+    if (totalComputerPoints == 5) {
+        winnerContent.textContent = 'Computer wins!!';
+        
     }
+    
+    if (totalPlayerPoints == 5) {
+        winnerContent.textContent = 'You win!!'
+    }
+
+    container.appendChild(winnerContent);
+
 }
 
-console.log(game());
+const container = document.querySelector('#container');
+
+const btnRock = document.querySelector('#btnRock');
+btnRock.addEventListener('click', function() {game("rock")});
+
+const btnPaper = document.querySelector('#btnPaper');
+btnPaper.addEventListener('click', function() {game("paper")});
+
+const btnScissors = document.querySelector('#btnScissors');
+btnScissors.addEventListener('click', function() {game("scissors")});
+
 
